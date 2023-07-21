@@ -1,7 +1,25 @@
 <script setup>
     import cerrarModal from '../assets/img/cerrar.svg'
 
-    const emit = defineEmits(['ocultar-modal'])
+    const emit = defineEmits(['ocultar-modal', 'update:nombre', 'update:cantidad', 'update:categoria'])
+    const props = defineProps({
+        modal: {
+            type: Object,
+            required: true
+        },
+        nombre: {
+            type: String,
+            required: true,
+        },
+        cantidad: {
+            type: [String, Number],
+            required: true,
+        },
+        categoria: {
+            type: String,
+            required: true,
+        },
+    })
 </script>
 
 <template>
@@ -13,7 +31,8 @@
             />
         </div>
         <div
-            class="contenedor"
+            class="contenedor contenedor-formulario"
+            :class="[modal.animar ? 'animar' : 'cerrar']"
         >
             <form
                 class="nuevo-gasto"
@@ -25,7 +44,8 @@
                         type="text"
                         id="nombre"
                         placeholder="Añade el nombre del gasto"
-                    
+                        :value="nombre"    
+                        @input="$emit('update:nombre', $event.target.value)"                
                     />
                 </div>
 
@@ -35,7 +55,8 @@
                         type="number"
                         id="cantidad"
                         placeholder="Añade la cantidad del gasto, ej. 300"
-                    
+                        :value="cantidad"
+                        @input="$emit('update:cantidad', +$event.target.value)"      
                     />
                 </div>
 
@@ -43,6 +64,8 @@
                     <label for="categoria">Categoria:</label>
                     <select 
                         id="categoria"
+                        :value="categoria"
+                        @input="$emit('update:categoria', $event.target.value)"      
                     >
                         <option value="">-- Seleccione --</option>
                         <option value="ahorro">Ahorro</option>
@@ -83,6 +106,19 @@
     .cerrar-modal img {
         width: 3rem;
         cursor: pointer;
+    }
+
+    .contenedor-formulario {
+        transition-property: all;
+        transition-duration: 3000ms;
+        transition-timing-function: ease-in;
+        opacity: 0;
+    }
+    .contenedor-formulario.animar {
+        opacity: 1;
+    }
+    .contenedor-formulario.cerrar {
+        opacity: 0;
     }
     .nuevo-gasto{
         margin: 10rem auto 0 auto;
